@@ -27,6 +27,9 @@ func main() {
 	app.Name = "jg"
 	app.Version = fmt.Sprintf("%s - Revision: %s", Version, Revision)
 	app.Usage = "Generate JSON from your shell"
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{Name: "pretty, p"},
+	}
 	app.Action = generate
 
 	app.Run(os.Args)
@@ -43,7 +46,14 @@ func generate(c *cli.Context) error {
 		json.SetP(i.Value, i.Path)
 	}
 
-	fmt.Println(json.StringIndent("", "  "))
+	var output string
+	if c.Bool("pretty") {
+		output = json.StringIndent("", "  ")
+	} else {
+		output = json.String()
+	}
+
+	fmt.Println(output)
 
 	return nil
 }
