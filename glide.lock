@@ -1,0 +1,8 @@
+hash: 08a92e0d4dacf903c0096cf92f3b55389cb86c32c5d64e120ba027354c04f699
+updated: 2017-04-17T10:29:41.918257161-04:00
+imports:
+- name: github.com/Jeffail/gabs
+  version: 2a3aa15961d5fee6047b8151b67ac2f08ba2c48c
+- name: github.com/urfave/cli
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+testImports: []
