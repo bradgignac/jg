@@ -51,12 +51,16 @@ func parseInput(input string) (*PathValuePair, error) {
 }
 
 func parseValue(value string) (reflect.Kind, interface{}) {
-	var parsed float64
+	var numberVal float64
+	var boolVal bool
 
-	err := json.Unmarshal([]byte(value), &parsed)
-	if err != nil {
-		return reflect.String, value
+	if err := json.Unmarshal([]byte(value), &numberVal); err == nil {
+		return reflect.Float64, numberVal
 	}
 
-	return reflect.Float64, parsed
+	if err := json.Unmarshal([]byte(value), &boolVal); err == nil {
+		return reflect.Bool, boolVal
+	}
+
+	return reflect.String, value
 }
