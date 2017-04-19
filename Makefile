@@ -11,6 +11,9 @@ dependencies: glide.yaml
 build:
 	go build ${LDFLAGS} -o bin/${BINARY}
 
+install: build
+	cp bin/${BINARY} ${GOPATH}/bin/${BINARY}
+
 clean:
 	rm -r bin
 
