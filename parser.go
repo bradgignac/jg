@@ -54,6 +54,10 @@ func parseValue(value string) (reflect.Kind, interface{}) {
 	var numberVal float64
 	var boolVal bool
 
+	if value == "null" {
+		return reflect.Invalid, nil
+	}
+
 	if err := json.Unmarshal([]byte(value), &numberVal); err == nil {
 		return reflect.Float64, numberVal
 	}
