@@ -8,10 +8,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-// Generate null for nothing.
-// Generate object with each key and null value.
 // Add support for null values.
-// Add support for string values.
 // Add support for boolean values.
 // Add support for number values.
 // Add support for number e format.
@@ -19,7 +16,10 @@ import (
 // Arrays?
 // Quoted keys?
 
+// Version of the CLI injected by the build.
 var Version string
+
+// Revision of the CLI injected by the build.
 var Revision string
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 }
 
 func generate(c *cli.Context) error {
-	input, err := parseAll(c.Args())
+	input, err := parse(c.Args())
 	if err != nil {
 		return err
 	}

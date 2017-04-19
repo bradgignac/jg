@@ -1,30 +1,33 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"reflect"
 	"regexp"
 )
 
-// PathValuePair contains a JSON path and its associated value.
-type PathValuePair struct {
-	Path  string
-	Value string
-}
-
-// ParseError represents an error parsing input into a PathValuePair.
+// ParseError represents an error parsing input into a PathValuePair
 type ParseError struct {
 	input string
+}
+
+// PathValuePair contains a JSON path and its associated value
+type PathValuePair struct {
+	Type  reflect.Kind
+	Path  string
+	Value interface{}
 }
 
 func (e *ParseError) Error() string {
 	return fmt.Sprintf("Cannot parse input into JSON path and value - %s", e.input)
 }
 
-func parseAll(inputs []string) ([]*PathValuePair, error) {
+func parse(inputs []string) ([]*PathValuePair, error) {
 	parsed := make([]*PathValuePair, len(inputs))
 
 	for i, input := range inputs {
-		input, err := parse(input)
+		input, err := parseInput(input)
 		if err != nil {
 			return nil, err
 		}
@@ -34,7 +37,7 @@ func parseAll(inputs []string) ([]*PathValuePair, error) {
 	return parsed, nil
 }
 
-func parse(input string) (*PathValuePair, error) {
+func parseInput(input string) (*PathValuePair, error) {
 	parser := regexp.MustCompile(`([^=]*)=([^=]*)`)
 	matches := parser.FindStringSubmatch(input)
 
@@ -42,5 +45,18 @@ func parse(input string) (*PathValuePair, error) {
 		return nil, &ParseError{input: input}
 	}
 
-	return &PathValuePair{Path: matches[1], Value: matches[2]}, nil
+	key := matches[1]
+	kind, value := parseValue(matches[2])
+	return &PathValuePair{kind, key, value}, nil
+}
+
+func parseValue(value string) (reflect.Kind, interface{}) {
+	var parsed float64
+
+	err := json.Unmarshal([]byte(value), &parsed)
+	if err != nil {
+		return reflect.String, value
+	}
+
+	return reflect.Float64, parsed
 }
